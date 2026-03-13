@@ -1,6 +1,6 @@
 {
   "name": "l33t-group-74",
-  "module": "index.ts",
+  "module": "server.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
@@ -10,6 +10,6 @@
     "typescript": "^5"
   },
   "scripts": {
-    "start": "bun run src/index.ts"
+    "start": "bun run src/server.ts"
   }
 }
