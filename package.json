@@ -11,5 +11,9 @@
   },
   "scripts": {
     "start": "bun run src/server.ts"
+  },
+  "dependencies": {
+    "redoc": "^2.5.2",
+    "swagger-ui-dist": "^5.32.0"
   }
 }
