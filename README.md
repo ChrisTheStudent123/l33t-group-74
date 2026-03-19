@@ -52,7 +52,9 @@ Description:
 Returns matching game's data
 
 Required Parameters:
-id 		[number] : the game id to delete
+|parameter|type|description|
+|---|---|---|
+|id|[number]|the game id to retrieve|
 
 example:
 ```/games/5```
@@ -67,6 +69,8 @@ example
 ```/games```
 
 Ex Payload:
+```
+json
 {
   "title": "Test Game",
   "company": "Nintendo",
@@ -76,6 +80,7 @@ Ex Payload:
   "developer": "Test Dev",
   "rating": 6
 }
+```
 
 
 ## DEL /games/{id}
@@ -96,6 +101,8 @@ Description:
 Updates an entry by matching id, requires all matching attributes
 
 Ex Payload:
+```
+json
 {
   "title": "Test Game Edited",
   "company": "Nintendo",
@@ -105,3 +112,4 @@ Ex Payload:
   "developer": "Test Dev Edited",
   "rating": 6
 }
+```
