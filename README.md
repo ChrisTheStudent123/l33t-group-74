@@ -35,14 +35,15 @@ Description:
 Returns a list of games from the game collection
 
 Optional Parameters:
-q 		[string] : a search query to search matching titles (can be partial)
-year 	[number] : a year to limit results by
-		{required} cmp [string]: "gt" | "lt" comparison operator for greater than and less than			  the year chosen (ignored if omitted)
-sort 	[string] : Column to sort results by. Must match an attribute (except id, default is 				   id)
-order 	[string] : "asc" | "desc"
-
-page 	[number] : Pagination
-limit 	[number] : Limit of results per page.
+|parameter|type|description|
+|---|---|---|
+|q|[string]|a search query to search matching titles (can be partial)|
+|year|[number]|a year to limit results by {requires cmp}|
+|cmp|[string]|"gt"/"lt" comparison operator for greater than and less than, only used with year|
+|sort|[string]|Column to sort results by. Must match an attribute (except id, default is id)|
+|order|[string]|"asc"/"desc"|
+|page|[number]| Pagination|
+|limit|[number]|Limit of results per page.|
 
 
 ## GET /games/{id}
