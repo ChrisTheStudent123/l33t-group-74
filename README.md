@@ -1,6 +1,6 @@
-# l33t-group-74
+# Game Collection - Mock API
 
-##Game Collection - Mock API
+*l33t-group-74*
 
 To start app:
 ```bun run server.ts```
@@ -11,7 +11,6 @@ Routes:
 /...
 /...
 /...
-
 
 # /games
 Attributes:
@@ -26,7 +25,7 @@ Attributes:
 |genre|[string]|game genre|
 |rating|[number]|game rating (0.0 - 10.0)|
 
-##```$${\color{green}GET}$$  /games```
+## $${\color{green}GET}$$ ```/games```
 
 example:
 ```/games```
@@ -42,14 +41,17 @@ Optional Parameters:
 |---|---|---|
 |q|[string]|a search query to search matching titles (can be partial)|
 |year|[number]|a year to limit results by {requires cmp}|
-|cmp|[string]|"gt"/"lt" comparison operator for greater than and less than, only used with year|
+|cmp|[string]|{required} to use with year - "gt"/"lt" comparison operator for greater than and less than|
 |sort|[string]|Column to sort results by. Must match an attribute (except id, default is id)|
 |order|[string]|"asc"/"desc"|
 |page|[number]| Pagination|
 |limit|[number]|Limit of results per page.|
 
 
-##```$${\color{green}GET}$$  /games/{id}```
+## $${\color{green}GET}$$ ```/games/{id}```
+
+example:
+```/games/5```
 
 Description:
 Returns matching game's data
@@ -59,17 +61,14 @@ Required Parameters:
 |---|---|---|
 |id|[number]|the game id to retrieve|
 
-example:
-```/games/5```
 
-
-##```$${\color{yellow}POST}$$  /games/{id}```
-
-Description:
-Adds a game to the collection using payload, requires all matching attributes.
+## $${\color{yellow}POST}$$ ```/games```
 
 example
 ```/games```
+
+Description:
+Adds a game to the collection using payload, requires all matching attributes.
 
 Ex Payload:
 ```
@@ -86,20 +85,7 @@ json
 ```
 
 
-##```$${\color{red}DEL}$$  /games/{id}```
-example
-```/games/28```
-
-Description:
-Deletes a game entry (and linked rating) by matching id
-
-Required Parameters:
-|parameter|type|description|
-|---|---|---|
-|id|[number]|the game id to delete|
-
-
-##```$${\color{blue}PUT}$$  /games/{id}```
+## $${\color{blue}PUT}$$  ```/games/{id}```
 
 example
 ```/games/28```
@@ -125,3 +111,17 @@ json
   "rating": 6
 }
 ```
+
+
+
+## $${\color{red}DEL}$$ ```/games/{id}```
+example
+```/games/28```
+
+Description:
+Deletes a game entry (and linked rating) by matching id
+
+Required Parameters:
+|parameter|type|description|
+|---|---|---|
+|id|[number]|the game id to delete|
