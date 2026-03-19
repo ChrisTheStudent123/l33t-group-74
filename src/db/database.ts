@@ -45,9 +45,7 @@ try {
     populateDb();
 } catch (error) {
     console.error("Database operation failed:", error);
-} finally {
-    db.close(); //temp closing after populating, keep open for api or reopen elsewhere
-}
+} 
 
 function populateDb() {
     const insertPlatforms = db.prepare("INSERT INTO platforms (company, system) VALUES (?,?)");
