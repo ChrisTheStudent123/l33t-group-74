@@ -1,5 +1,7 @@
 # l33t-group-74
 
+##Game Collection - Mock API
+
 To start app:
 ```bun run server.ts```
 
@@ -24,12 +26,13 @@ Attributes:
 |genre|[string]|game genre|
 |rating|[number]|game rating (0.0 - 10.0)|
 
-## GET /games
+##```$${\color{green}GET}$$  /games```
 
 example:
 ```/games```
 ```/games?q=mario&sort=platform```
 ```/games?year=2018&cmp=gt&page2&limit=5```
+```/games?year=2022&cmp=lt&order=asc&page=2&limit=4&sort=system```
 
 Description:
 Returns a list of games from the game collection
@@ -46,7 +49,7 @@ Optional Parameters:
 |limit|[number]|Limit of results per page.|
 
 
-## GET /games/{id}
+##```$${\color{green}GET}$$  /games/{id}```
 
 Description:
 Returns matching game's data
@@ -60,10 +63,10 @@ example:
 ```/games/5```
 
 
-## POST /games
+##```$${\color{yellow}POST}$$  /games/{id}```
 
 Description:
-Adds a game to the collection
+Adds a game to the collection using payload, requires all matching attributes.
 
 example
 ```/games```
@@ -83,22 +86,31 @@ json
 ```
 
 
-## DEL /games/{id}
-
+##```$${\color{red}DEL}$$  /games/{id}```
 example
 ```/games/28```
 
 Description:
 Deletes a game entry (and linked rating) by matching id
 
+Required Parameters:
+|parameter|type|description|
+|---|---|---|
+|id|[number]|the game id to delete|
 
-## PUT /games/{id}
+
+##```$${\color{blue}PUT}$$  /games/{id}```
 
 example
 ```/games/28```
 
 Description:
 Updates an entry by matching id, requires all matching attributes
+
+Required Parameters:
+|parameter|type|description|
+|---|---|---|
+|id|[number]|the game id to update|
 
 Ex Payload:
 ```
