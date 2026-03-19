@@ -13,14 +13,16 @@ Routes:
 
 # /games
 Attributes:
-id 				[number]  : entry id
-title 			[string]  : game title
-release_year	[number]  : game release year
-developer		[string]  : developer of game
-company			[string]  : company of system game is released on
-system 			[string]  : system game belongs to
-genre 			[string]  : game genre
-rating 			[number]  : game rating (0.0 - 10.0)
+|field|type|description|
+|---|---|---|
+|id|[number]|entry id|
+|title|[string]|game title|
+|release_year|[number]|game release year|
+|developer|[string]|developer of game|
+|company|[string]|company of system game is released on|
+|system|[string]|system game belongs to|
+|genre|[string]|game genre|
+|rating|[number]|game rating (0.0 - 10.0)|
 
 ## GET /games
 
