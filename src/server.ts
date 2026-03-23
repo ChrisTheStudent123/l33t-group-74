@@ -1,5 +1,6 @@
 import { serve } from "bun";
 import { gameRoute } from "./routes/game.route";
+import { platformRoute } from "./routes/platform.route";
 // import other routes when finished
 
 serve({
@@ -10,6 +11,9 @@ serve({
 // Route matching
 		if (url.pathname.startsWith("/games")) {
 			return gameRoute(req);
+		}
+		else if (url.pathname.startsWith("/platforms")) {
+			return platformRoute(req);
 		}
 
 // Add other routes later
