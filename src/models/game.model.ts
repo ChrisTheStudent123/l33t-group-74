@@ -12,6 +12,17 @@ export const GameModel = {
 		order?: "asc" | "desc";
 	} = {}) {
 		const { search, year, comparator, page, limit, sort = "g.id", order = "asc" } = options;
+		
+		const validColumns = [
+			  "g.id",
+			  "title",
+			  "release_year",
+			  "developer",
+			  "company",
+			  "system",
+			  "genre",
+			  "rating"
+		];
 
 		const conditions: string[] = [];
 		const params: (string | number)[] = [];
@@ -42,11 +53,13 @@ export const GameModel = {
 			LEFT JOIN genres ge ON g.genre_id = ge.id
 			LEFT JOIN ratings r ON g.id = r.game_id
 		`;
-
-		if (conditions.length) sql += " WHERE " + conditions.join(" AND ");
-
-		sql += ` ORDER BY ${sort} ${order.toUpperCase()}`;
-
+		const sortColumn = validColumns.includes(sort) ? sort : "g.id";
+		const orderDir = order?.toLowerCase() === "desc" ? "DESC" : "ASC";
+		
+		if (conditions.length) { 
+			sql += " WHERE " + conditions.join(" AND ");
+		}
+		sql += ` ORDER BY ${sortColumn} ${orderDir}`;
 		if (limit !== undefined) {
 			sql += " LIMIT ?";
 			params.push(limit);
@@ -109,27 +122,30 @@ export const GameModel = {
 		})();
 	},
 
-	update(id: number, game: any) {
+	update(gameId: number, game: any) {
 		return db.transaction(() => {
 			const platform = db.query(`SELECT id FROM platforms WHERE system = ? AND company = ?`).get(game.system, game.company);
-			if (!platform) throw new Error("Platform not found");
+			if (!platform) return { success: false, reason: "platform" }
 
 			const genre = db.query(`SELECT id FROM genres WHERE genre = ?`).get(game.genre);
-			if (!genre) throw new Error("Genre not found");
+			if (!genre) return { success: false, reason: "genre" }
 
-			db.query(`
+			const result = db.query(`
 				UPDATE games
 				SET platform_id = ?, genre_id = ?, title = ?, release_year = ?, developer = ?
 				WHERE id = ?
-			`).run(platform.id, genre.id, game.title, game.release_year, game.developer, id);
+			`).run(platform.id, genre.id, game.title, game.release_year, game.developer, gameId);
+			
+			if (result.changes === 0) return { success: false, reason: "game" }
+			
+			db.query(`UPDATE ratings SET rating = ? WHERE game_id = ?`).run(game.rating, gameId);
 
-			db.query(`UPDATE ratings SET rating = ? WHERE game_id = ?`).run(game.rating, id);
-
-			return id;
+			return { success: true };
 		})();
 	},
 
 	delete(id: number) {
-		return db.query(`DELETE FROM games WHERE id = ?`).run(id);
+		const result = db.query(`DELETE FROM games WHERE id = ?`).run(id);
+		return result.changes > 0;
 	}	
 };
