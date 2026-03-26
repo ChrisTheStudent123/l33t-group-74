@@ -1,7 +1,5 @@
-import { db } from "./sqlite.ts"
+import { db } from "./database";
 
 export const ratingRepo = {
-
-
-
+    //list(options: {limit?: })
 }

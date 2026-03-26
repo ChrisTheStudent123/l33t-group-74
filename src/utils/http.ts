@@ -13,5 +13,5 @@ export async function readJson(req: Request) {
 }
 
 export async function jsonError(status: number, error: ApiError) {
-    return Response.json(error, { status });
+    return Response.json(error.message, { status, headers: { "Content-Type": "application/json" } });
 }
