@@ -23,12 +23,30 @@ export const RatingModel = {
   },
   create(rating: any) {
     return db.transaction(() => {
-      const duplicate: any = db.query(`SELECT id FROM ratings WHERE id = ?`).get(rating.game_id);
-      if (duplicate.id !== undefined) {
-        throw new Error("Rating for game already exists");
+      let gameId: number;
+
+      if (rating.game_id) {
+        gameId = rating.game_id;
+      } else {
+        const findGameId: any = db
+          .query(`SELECT id FROM games WHERE title = ?`)
+          .all(rating.game_title);
+
+        if (findGameId.length === 1) {
+          gameId = findGameId[0].id;
+        } else if (findGameId.length > 1) {
+          throw new Error("Multiple entries match game_title, try game_id instead");
+        } else {
+          throw new Error("Game not found");
+        }
       }
 
-      const game: any = db.query(`SELECT id FROM games WHERE id = ?`).get(rating.game_id);
+      const duplicate: any = db.query(`SELECT id FROM ratings WHERE game_id = ?`).get(gameId);
+      if (duplicate) {
+        throw new Error("Game already has rating");
+      }
+
+      const game: any = db.query(`SELECT id FROM games WHERE id = ?`).get(gameId);
       if (!game) {
         throw new Error("Game not found");
       }
@@ -40,7 +58,7 @@ export const RatingModel = {
         VALUES (?, ?)
         `,
         )
-        .run(game.id, rating.rating);
+        .run(gameId, rating.rating);
 
       return db.query(`SELECT id FROM ratings WHERE id = ?`).get(stmt.lastInsertRowid);
     })();
@@ -50,5 +68,8 @@ export const RatingModel = {
     return db.transaction(() => {
       return rating.id;
     })();
+  },
+  delete(id: number) {
+    return db.query(`DELETE FROM ratings WHERE id = ?`).run(id);
   },
 };

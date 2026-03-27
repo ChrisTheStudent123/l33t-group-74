@@ -1,10 +1,11 @@
 import { jsonError, readJson } from "../utils/http";
 import { RatingModel } from "../models/rating.model";
 
-function addHeaders(){
+function addHeaders() {
   return { "Content-Type": "application/json" };
 }
 
+//should be unncessary
 function validateIdType(id: number): Boolean {
   if (!id || isNaN(id)) {
     return false;
@@ -55,6 +56,7 @@ export const RatingController = {
     } catch (e: any) {
       console.log(e);
       //return jsonError(500, { error: "ServerError", message: "Unexpected server error" });
+      console.log(e.message);
       return new Response(
         JSON.stringify({ error: "Failed to fetch ratings", details: e.message }),
         {
@@ -67,7 +69,7 @@ export const RatingController = {
 
   async getById(id: number): Promise<Response> {
     try {
-      if (validateIdType(id)) {
+      if (!validateIdType(id)) {
         return new Response(JSON.stringify({ error: "Invalid rating id" }), {
           status: 400,
           headers: { "Content-Type": "application/json" },
@@ -83,6 +85,7 @@ export const RatingController = {
       }
       return successResponse(rating, 200);
     } catch (e: any) {
+      console.log(e.message);
       return new Response(
         JSON.stringify({ error: "Failed to fetch that rating", details: e.message }),
         {
@@ -119,6 +122,7 @@ export const RatingController = {
         headers: { "Content-Type": "application/json" },
       });
     } catch (e: any) {
+      console.log(e.message);
       return new Response(
         JSON.stringify({ error: "Failed to create new rating", details: e.message }),
         {
@@ -130,7 +134,7 @@ export const RatingController = {
   },
   async update(req: Request, id: number): Promise<Response> {
     try {
-      if (validateIdType(id)) {
+      if (!validateIdType(id)) {
         return new Response(JSON.stringify({ error: "Invalid rating id" }), {
           status: 400,
           headers: { "Content-Type": "application/json" },
@@ -139,11 +143,10 @@ export const RatingController = {
 
       const body = await req.json();
 
-      
-
       const data: string = "placeholder";
       return successResponse(data, 200);
     } catch (e: any) {
+      console.log(e.message);
       return new Response(
         JSON.stringify({ error: "Failed to update that rating", details: e.message }),
         {
@@ -155,8 +158,23 @@ export const RatingController = {
   },
   async delete(id: number): Promise<Response> {
     try {
+      if (!validateIdType(id)) {
+        return new Response(JSON.stringify({ error: "Invalid rating id" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      const status = RatingModel.delete(id);
+      console.log("status", status);
+      if (!status.changes) {
+        return new Response(JSON.stringify({ error: "Rating not found" }), {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
       return new Response(null, { status: 204 });
     } catch (e: any) {
+      console.log(e.message);
       return new Response(
         JSON.stringify({ error: "Failed to delete that rating", details: e.message }),
         {
