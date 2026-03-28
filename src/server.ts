@@ -1,11 +1,16 @@
-import { serve } from "bun";
-import { gameRoute } from "./routes/game.route";
+import { serve, } from "bun";
+import { gameRoute } from "./routes/game.route"; 
 import { ratingRoute } from "./routes/rating.route";
+
 // import other routes when finished
 serve({
   port: 3000,
-  async fetch(req) {
+  async fetch(req, server) {
     const url = new URL(req.url);
+
+
+    //console.log(req);
+    //console.log(server.requestIP(req));
 
     // Route matching
     if (url.pathname.startsWith("/games")) {
