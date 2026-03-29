@@ -15,8 +15,6 @@
     "rl": "bun --watch src/utils/rateLimiter.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^12.8.0",
-    "knex": "^3.2.7",
     "rate-limiter-flexible": "^10.0.1",
     "redoc": "^2.5.2",
     "swagger-ui-dist": "^5.32.0"

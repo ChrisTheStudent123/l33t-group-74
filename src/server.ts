@@ -1,6 +1,7 @@
-import { serve, } from "bun";
-import { gameRoute } from "./routes/game.route"; 
+import { serve } from "bun";
+import { gameRoute } from "./routes/game.route";
 import { ratingRoute } from "./routes/rating.route";
+import { checkRate } from "./utils/rateLimiter";
 
 // import other routes when finished
 serve({
@@ -8,9 +9,19 @@ serve({
   async fetch(req, server) {
     const url = new URL(req.url);
 
-
     //console.log(req);
     //console.log(server.requestIP(req));
+
+    const ip = server.requestIP(req);
+
+    if (!ip) {
+      return new Response(JSON.stringify({ error: "Malformed address details" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    checkRate(ip.address);
 
     // Route matching
     if (url.pathname.startsWith("/games")) {

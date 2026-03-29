@@ -1,14 +1,47 @@
 import { db } from "../db/database";
 
 export const RatingModel = {
-  getAll(limit: number) {
-    const stmt = db.query(`
+  getAll(
+    opts: {
+      search?: string;
+      rating?: number;
+      comparator?: "gt" | "lt" | "eq";
+      page?: number;
+      limit?: number;
+      sort?: string;
+      order?: "asc" | "desc";
+      gameId?: number;
+    } = {},
+  ) {
+    const { search, rating, comparator, page, limit, sort = "r.id", order = "asc", gameId } = opts;
+
+    const conditions: string[] = [];
+    const params: (string | number)[] = [];
+
+    //if this is set it should ignore all other parameters
+    if(gameId){
+
+    }
+
+    if (search) {
+      conditions.push("LOWER(g.title) LIKE LOWER(?)");
+      params.push(`%${search}`);
+    }
+
+    if (rating !== undefined && comparator) {
+      const operator = comparator === "gt" ? ">" : "<";
+      conditions.push(`r.rating ${operator} ?`);
+      params.push(rating);
+    }
+
+
+    const stmt = `
       SELECT r.id, r.game_id, g.title as game_title, r.rating 
       FROM ratings r 
       JOIN  games g ON r.game_id = g.id
-      LIMIT ?
-      `);
-    return stmt.all(limit);
+      `;
+
+    return db.query(stmt).all(...params);
   },
   getById(id: number) {
     const stmt = db.query(`
@@ -22,16 +55,16 @@ export const RatingModel = {
     return result;
   },
   getGameIdByGameId(gameId: number) {
-    const game: any = db.query(`SELECT id FROM games WHERE id = ?`).get(gameId);
-    return game;
+    return db.query(`SELECT id FROM games WHERE id = ?`).get(gameId);
   },
   getGamesIdByTitle(gameTitle: string) {
-    const findGameId: any = db.query(`SELECT id FROM games WHERE title = ?`).all(gameTitle);
-    return findGameId;
+    return db.query(`SELECT id FROM games WHERE LOWER(title) = LOWER(?)`).all(gameTitle);
   },
   getRatingsIdByGameId(gameId: number) {
-    const duplicate: any = db.query(`SELECT id FROM ratings WHERE game_id = ?`).get(gameId);
-    return duplicate;
+    return db.query(`SELECT id FROM ratings WHERE game_id = ?`).get(gameId);
+  },
+  findRating(ratingId: number) {
+    return db.query(`SELECT id FROM ratings WHERE id = ?`).get(ratingId);
   },
   create(gameId: number, rating: number) {
     return db.transaction(() => {

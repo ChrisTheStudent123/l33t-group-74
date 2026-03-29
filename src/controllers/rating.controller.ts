@@ -65,32 +65,86 @@ export const RatingController = {
   async list(req: Request): Promise<Response> {
     try {
       const url = new URL(req.url);
+      const validParams = ["game_id", "rating", "cmp", "sort", "order", "page", "limit"];
+      const searchParams = Array.from(url.searchParams.keys());
+
+      const invalidParams = searchParams.filter((param) => !validParams.includes(param));
+      if (invalidParams.length > 0) {
+        return errorResponse(`Unexpected parameters: ${invalidParams.join(", ")}`, 400);
+      }
       const search = url.searchParams.get("q") || undefined;
-      const yearParam = url.searchParams.get("year");
-      const year = yearParam ? Number(yearParam) : undefined;
+      if (search && search.length > 50) {
+        return errorResponse("Search must be less than 50", 400);
+      }
+      const ratingParam = url.searchParams.get("rating");
+      const rating = ratingParam ? Number(ratingParam) : undefined;
 
-      if (validateNumberType(year)) {
-        return errorResponse("Invalid tear parameter", 400);
+      if (!validateNumberType(rating) || typeof rating !== "number") {
+        return errorResponse("Rating must be a number", 400);
+      }
+      if (validateRating(rating)) {
+        return errorResponse("Rating must be between 0 and 10", 400);
       }
 
-      const comparator = url.searchParams.get("cmp") as "gt" | "lt" | undefined;
-      if (comparator && comparator !== "gt" && comparator !== "lt") {
-        return errorResponse("Comparator must be 'gt' or 'lt'", 400);
+      const comparator = url.searchParams.get("comparator") as "gt" | "lt" | "eq" | undefined;
+      if (comparator !== "gt" && comparator !== "lt" && comparator !== "eq")
+        if (ratingParam) {
+          return errorResponse("Comparator must be 'gt', 'lt' or 'eq'", 400);
+        }
+
+      const validColumns = ["title", "rating"];
+
+      const sortParam = url.searchParams.get("sort");
+      let sortColumn: string;
+      if (sortParam && !validColumns.includes(sortParam)) {
+        return errorResponse(`Invalid sort param: ${sortParam}`, 400);
+      }
+      if (sortParam) {
+        sortColumn = sortParam;
+      } else {
+        sortColumn = "r.id";
       }
 
-      const possibleParams = [
-        "game_id",
-        "title",
-        "release_year",
-        "developer",
-        "company",
-        "system",
-        "genre",
-        "rating",
-      ];
+      const orderParam = (url.searchParams.get("order") || "asc").toLowerCase();
 
-      const limit = 99;
-      const ratings = await RatingModel.getAll(limit);
+      if (orderParam && orderParam !== "asc" && orderParam !== "desc") {
+        return errorResponse("Order must be either 'asc' or desc'", 400);
+      }
+
+      const order: "asc" | "desc" = orderParam || "asc";
+
+      const pageParam = url.searchParams.get("page");
+      const page = pageParam ? Number(pageParam) : undefined;
+      if (!page || isNaN(page) || page < 1) {
+        return errorResponse("Page parameter must greater than 0", 422);
+      }
+
+      const limitParam = url.searchParams.get("limit");
+      const limit = limitParam ? Number(limitParam) : undefined;
+      if (!limit || isNaN(limit) || limit < 1) {
+        return errorResponse("Limit parameter must be between 1-1000", 422);
+      }
+
+      const gameIdParam = url.searchParams.get("game_id");
+      const gameId = gameIdParam ? Number(gameIdParam) : undefined;
+      if (!validateNumberType(gameId) || typeof gameId !== "number") {
+        return errorResponse("Invalid rating id", 400);
+      }
+      const gameFound: any = RatingModel.getGameIdByGameId(gameId);
+      if (!gameFound) {
+        return errorResponse("Game id not found", 400);
+      }
+
+      const ratings = RatingModel.getAll({
+        search,
+        rating,
+        comparator,
+        page,
+        limit,
+        sort: sortColumn,
+        order,
+        gameId,
+      });
       return successResponse(ratings, 200);
     } catch (e: any) {
       console.log(e);
@@ -127,7 +181,7 @@ export const RatingController = {
       if (typeof body["rating"] !== "number") {
         return errorResponse("Rating must be a number", 400);
       }
-      if (!validateRating(body["rating"])) {
+      if (!validateRating(body["rating"]) || typeof body["rating"] !== "number") {
         return errorResponse("Rating must be between 0 and 10", 400);
       }
 
@@ -157,10 +211,7 @@ export const RatingController = {
 
       const rating = RatingModel.create(gameId, body.rating);
 
-      return new Response(JSON.stringify({ rating }), {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      });
+      return successResponse(rating, 201);
     } catch (e: any) {
       console.log(e);
       return errorResponse("Failed to create a new rating", 500);
@@ -169,14 +220,14 @@ export const RatingController = {
   async update(req: Request, id: number): Promise<Response> {
     try {
       const body: any = await req.json();
-      //would it even make it this far if it didn't pass regex?
+      //would it even make it this far if it didn't pass regex or does that not check if it's a number?
       if (!validateNumberType(id)) {
         return errorResponse("Invalid rating id", 400);
       }
       if (body["rating"] === undefined) {
         return errorResponse("Missing required field: rating", 400);
       }
-      if (!validateRating(body["rating"])) {
+      if (!validateNumberType(body["rating"]) || !validateRating(body["rating"])) {
         return errorResponse("Rating must be between 0 and 10", 400);
       }
 
