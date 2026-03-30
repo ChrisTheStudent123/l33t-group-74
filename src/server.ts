@@ -1,12 +1,26 @@
 import { serve } from "bun";
+import { gameRoute } from "./routes/game.route";
+// import other routes when finished
 
-//console.log("Hello via Bun!");
 serve({
-  port: 3000,
-  fetch(req) {
-  console.log("Hello via Bun!");
-  return Response.json({ ok: true, ts: Date.now() });
-  },
+	port: 3000,
+	async fetch(req) {
+		const url = new URL(req.url);
+
+// Route matching
+		if (url.pathname.startsWith("/games")) {
+			return gameRoute(req);
+		}
+
+// Add other routes later
+
+
+
+//Fallback rotue
+		return new Response(JSON.stringify({ error: "Not found" }), { 
+			status: 404, headers: { 'Content-Type': 'application/json' }  
+		});
+	},
 });
 
-console.log("http://localhost:3000");
+console.log("Game Collection Server running at http://localhost:3000");
