@@ -3,7 +3,11 @@
 *l33t-group-74*
 
 To start app:
-```bun run server.ts```
+```bun start```
+
+
+To for testing without rate limiter:
+```bun testing```
 
 
 Routes:
