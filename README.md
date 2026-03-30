@@ -6,7 +6,7 @@ To start app:
 ```bun start```
 
 
-To start without rate limiter:
+To for testing without rate limiter:
 ```bun testing```
 
 
