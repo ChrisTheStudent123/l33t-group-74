@@ -3,7 +3,6 @@ import { gameRoute } from "./routes/game.route";
 import { ratingRoute } from "./routes/rating.route";
 import { checkRateLimit } from "./utils/rateLimiter";
 
-//const rateLimit: boolean = true;
 const rateLimit = process.env.RATE_LIMIT === "off" ? false : true;
 
 // import other routes when finished
@@ -12,11 +11,9 @@ serve({
   async fetch(req, server) {
     const url = new URL(req.url);
 
-    //console.log(req);
-    //console.log(server.requestIP(req));
     const ip = server.requestIP(req);
     if (!ip) {
-      return new Response(JSON.stringify({ error: "Malformed address details" }), {
+      return new Response(JSON.stringify({ error: "Malformed address content" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
