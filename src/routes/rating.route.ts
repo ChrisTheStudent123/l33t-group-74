@@ -10,7 +10,7 @@ export async function ratingRoute(req: Request) {
   const method = req.method;
 
   if (method === "GET") {
-    if (pathname === "/ratings" || pathname === "/ratings/") {
+    if (pathname === "/ratings") {
       return RatingController.list(req);
     }
     const match = matchRegexId(pathname);

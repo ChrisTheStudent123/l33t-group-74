@@ -8,10 +8,13 @@ const opts = {
 
 const rateLimiter = new RateLimiterMemory(opts);
 
+
+//Returns response is check fails
 export async function checkRateLimit(address: string): Promise<Response | undefined> {
   return rateLimiter
-    .consume(address, 1)
+    .consume(address, 1) // Points use per connection
     .then((rateLimitRes) => {
+      //could potentially return headers here too
       return undefined;
     })
     .catch((rejRes) => {

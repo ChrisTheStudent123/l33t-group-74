@@ -15,37 +15,75 @@ export const RatingModel = {
   ) {
     const { search, rating, comparator, page, limit, sort = "r.id", order = "asc", gameId } = opts;
 
+    const validColumns = ["r.id", "title", "rating"];
+
     const conditions: string[] = [];
     const params: (string | number)[] = [];
 
-    //if this is set it should ignore all other parameters
-    if(gameId){
-
-    }
-
-    if (search) {
-      conditions.push("LOWER(g.title) LIKE LOWER(?)");
-      params.push(`%${search}`);
-    }
-
-    if (rating !== undefined && comparator) {
-      const operator = comparator === "gt" ? ">" : "<";
-      conditions.push(`r.rating ${operator} ?`);
-      params.push(rating);
-    }
-
-
-    const stmt = `
-      SELECT r.id, r.game_id, g.title as game_title, r.rating 
+    let stmt = `
+      SELECT r.id as rating_id, r.rating, r.game_id, g.title as game_title
       FROM ratings r 
       JOIN  games g ON r.game_id = g.id
       `;
+
+    //if this is set it should ignore all other parameters
+    if (gameId) {
+      stmt += "WHERE g.id = ?";
+      params.push(`${gameId}`);
+    } else {
+      if (search) {
+        conditions.push("LOWER(g.title) LIKE LOWER(?)");
+        params.push(`%${search}`);
+      }
+
+      if (rating !== undefined && comparator) {
+        let operator: ">" | "<" | "=" = "=";
+        switch (comparator) {
+          case "gt":
+            operator = ">";
+            break;
+          case "lt":
+            operator = "<";
+            break;
+        }
+        conditions.push(`r.rating ${operator} ?`);
+        params.push(rating);
+      }
+      const sortColumn = validColumns.includes(sort) ? sort : "r.id";
+      const orderDir = order?.toLowerCase() === "desc" ? "DESC" : "ASC";
+
+      if (conditions.length) {
+        stmt += " WHERE " + conditions.join(" AND ");
+      }
+      stmt += ` ORDER BY ${sortColumn} ${orderDir}`;
+
+      if (limit !== undefined) {
+        stmt += " LIMIT ?";
+        params.push(limit);
+
+        if (page !== undefined) {
+          const offset = (page - 1) * limit;
+          stmt += " OFFSET ?";
+          params.push(offset);
+        }
+      } else if (page !== undefined) {
+        const defaultLimit = 250;
+        stmt += " LIMIT ?";
+        params.push(defaultLimit);
+
+        const offset = (page - 1) * defaultLimit;
+        stmt += " OFFSET ?";
+        params.push(offset);
+      }
+    }
+    console.log("stmt", stmt);
+    console.log("params", ...params);
 
     return db.query(stmt).all(...params);
   },
   getById(id: number) {
     const stmt = db.query(`
-      SELECT r.id, r.game_id, g.title as game_title, r.rating 
+      SELECT r.id as rating_id, r.rating, r.game_id, g.title as game_title
       FROM ratings r 
       JOIN  games g ON r.game_id = g.id
 	    WHERE g.id = ?

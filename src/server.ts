@@ -3,6 +3,8 @@ import { gameRoute } from "./routes/game.route";
 import { ratingRoute } from "./routes/rating.route";
 import { checkRateLimit } from "./utils/rateLimiter";
 
+const rateLimit: boolean = true;
+
 // import other routes when finished
 serve({
   port: 3000,
@@ -19,8 +21,9 @@ serve({
       });
     }
 
+    //Returns rate limiter responses if check fails (internal error or rate exceeded)
     const rateRes = await checkRateLimit(ip.address);
-    if (rateRes) {
+    if (rateRes && rateLimit) {
       return rateRes;
     }
 

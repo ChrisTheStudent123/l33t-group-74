@@ -11,8 +11,7 @@
   },
   "scripts": {
     "start": "bun src/server.ts",
-    "dev": "bun --watch src/server.ts",
-    "rl": "bun --watch src/utils/rateLimiter.ts"
+    "dev": "bun --watch src/server.ts"
   },
   "dependencies": {
     "rate-limiter-flexible": "^10.0.1",
