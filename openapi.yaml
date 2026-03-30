@@ -2,14 +2,267 @@ openapi: 3.0.3
 info:
   title: Game Collection API
   version: 1.0.0
+  description: A RESTful API for managing a video game collection and ratings.
 
 servers:
-    - url: http://localhost:3000
+  - url: http://localhost:3000
 
 paths:
-    /games:
-      get:
-        summary: List of games
-        responses:
-          "200":
-            description: A list of games
+  /games:
+    get:
+      summary: Get all games
+      description: Returns a list of games from the collection with optional filtering and pagination.
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Search query for matching titles (partial match). Max 50 chars.
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: Year to limit results by (requires cmp parameter).
+        - in: query
+          name: cmp
+          schema:
+            type: string
+            enum: [gt, lt]
+          description: Comparison operator for year (gt = greater than, lt = less than).
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Column to sort by (e.g., title, release_year).
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Sort order direction.
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number for pagination (>= 1).
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results per page (1-1000).
+      responses:
+        "200":
+          description: A list of games.
+        "400":
+          description: Bad request (invalid parameters).
+    post:
+      summary: Create a new game
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameInput'
+      responses:
+        "201":
+          description: Game created successfully.
+        "400":
+          description: Validation error.
+
+  /games/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: The game ID
+    get:
+      summary: Get a game by ID
+      responses:
+        "200":
+          description: Game details.
+        "404":
+          description: Game not found.
+    put:
+      summary: Update a game
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameInput'
+      responses:
+        "200":
+          description: Game updated successfully.
+        "404":
+          description: Game not found.
+    delete:
+      summary: Delete a game
+      responses:
+        "204":
+          description: Game deleted successfully.
+        "404":
+          description: Game not found.
+
+  /ratings:
+    get:
+      summary: Get all ratings
+      responses:
+        "200":
+          description: A list of ratings.
+    post:
+      summary: Create a new rating
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - rating
+              properties:
+                game_id:
+                  type: integer
+                game_title:
+                  type: string
+                rating:
+                  type: number
+      responses:
+        "201":
+          description: Rating created successfully.
+
+  /ratings/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get a rating by ID
+      responses:
+        "200":
+          description: Rating details.
+    put:
+      summary: Update a rating
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - rating
+              properties:
+                rating:
+                  type: number
+      responses:
+        "200":
+          description: Rating updated.
+    delete:
+      summary: Delete a rating
+      responses:
+        "204":
+          description: Rating deleted successfully.
+  /genres:
+    get:
+      summary: Get all genres
+      responses:
+        "200":
+          description: A list of genres.
+    post:
+      summary: Create a new genre
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - genre
+              properties:
+                genre:
+                  type: string
+                  example: "Metroidvania"
+      responses:
+        "201":
+          description: Genre created successfully.
+        "409":
+          description: Genre already exists.
+
+  /genres/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get a genre by ID
+      responses:
+        "200":
+          description: Genre details.
+        "404":
+          description: Genre not found.
+    put:
+      summary: Update a genre
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - genre
+              properties:
+                genre:
+                  type: string
+                  example: "Action RPG"
+      responses:
+        "200":
+          description: Genre updated successfully.
+        "404":
+          description: Genre not found.
+    delete:
+      summary: Delete a genre
+      responses:
+        "204":
+          description: Genre deleted successfully.
+        "404":
+          description: Genre not found.
+
+components:
+  schemas:
+    GameInput:
+      type: object
+      required:
+        - title
+        - company
+        - system
+        - genre
+        - release_year
+        - developer
+        - rating
+      properties:
+        title:
+          type: string
+          example: "Super Mario Odyssey"
+        company:
+          type: string
+          example: "Nintendo"
+        system:
+          type: string
+          example: "Switch"
+        genre:
+          type: string
+          example: "Platformer"
+        release_year:
+          type: integer
+          example: 2017
+        developer:
+          type: string
+          example: "Nintendo EPD"
+        rating:
+          type: number
+          example: 9.4
