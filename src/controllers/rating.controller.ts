@@ -1,9 +1,4 @@
-import { jsonError, readJson } from "../utils/http";
 import { RatingModel } from "../models/rating.model";
-
-function addHeaders() {
-  return { "Content-Type": "application/json" };
-}
 
 //should be unncessary
 function validateNumberType(num: any): Boolean {
@@ -11,15 +6,6 @@ function validateNumberType(num: any): Boolean {
     return false;
   }
   return true;
-}
-
-function validateRatingFound(rating: any) {
-  if (!rating) {
-    return new Response(JSON.stringify({ error: "Rating not found" }), {
-      status: 404,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
 }
 
 function successResponse(data: any, status: number): Response {
@@ -31,27 +17,6 @@ function errorResponse(errorMessage: string, status: number): Response {
     status: status,
     headers: { "Content-Type": "application/json" },
   });
-}
-
-function jsonResponse(object: any, status: number): Response {
-  return new Response(JSON.stringify(object), {
-    status: status,
-    headers: { "Content-Type": "application/json" },
-  });
-}
-
-function validateString(value: any): boolean {
-  if (typeof value === "string" && value.trim() !== "") {
-    return true;
-  }
-  return false;
-}
-
-function validateNumber(value: any): boolean {
-  if (typeof value === "number") {
-    return true;
-  }
-  return false;
 }
 
 function validateRating(value: number): boolean {
@@ -219,7 +184,7 @@ export const RatingController = {
       return successResponse(rating, 201);
     } catch (e: any) {
       console.log(e);
-      return errorResponse("Failed to create a new rating", 500);
+      return errorResponse("Failed to create rating", 500);
     }
   },
   async update(req: Request, id: number): Promise<Response> {

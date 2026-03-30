@@ -11,7 +11,7 @@
     "typescript": "^5"
   },
   "scripts": {
-    "start": "cross-env RATE_LIMIT=on bun src/server.ts",
+    "start": "bun src/server.ts",
     "testing": "cross-env RATE_LIMIT=off bun src/server.ts",
     "dev": "cross-env RATE_LIMIT=on bun --watch src/server.ts",
     "dev:off": "cross-env RATE_LIMIT=off bun --watch src/server.ts"
