@@ -76,9 +76,6 @@ export const RatingModel = {
         params.push(offset);
       }
     }
-    console.log("stmt", stmt);
-    console.log("params", ...params);
-
     return db.query(stmt).all(...params);
   },
   getById(id: number) {

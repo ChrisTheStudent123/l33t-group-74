@@ -202,10 +202,12 @@ export const RatingController = {
         }
       }
 
+      /*
       const duplicate: any = RatingModel.getRatingsIdByGameId(gameId);
       if (duplicate) {
         return errorResponse("Game already has rating", 422);
       }
+        */
 
       const gameFound: any = RatingModel.getGameIdByGameId(gameId);
       if (!gameFound) {
@@ -247,7 +249,6 @@ export const RatingController = {
         return errorResponse("Invalid rating id", 400);
       }
       const status = RatingModel.delete(id);
-      console.log("status", status);
       if (!status.changes) {
         return errorResponse("Rating not found", 404);
       }

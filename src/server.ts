@@ -3,7 +3,8 @@ import { gameRoute } from "./routes/game.route";
 import { ratingRoute } from "./routes/rating.route";
 import { checkRateLimit } from "./utils/rateLimiter";
 
-const rateLimit: boolean = true;
+//const rateLimit: boolean = true;
+const rateLimit = process.env.RATE_LIMIT === "off" ? false : true;
 
 // import other routes when finished
 serve({
@@ -27,7 +28,6 @@ serve({
       return rateRes;
     }
 
-    console.log("rateRes", rateRes);
     // Route matching
     if (url.pathname.startsWith("/games")) {
       return gameRoute(req);

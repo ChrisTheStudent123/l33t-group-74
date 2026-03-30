@@ -34,7 +34,7 @@ export async function checkRateLimit(address: string): Promise<Response | undefi
           "X-RateLimit-Remaining": String(rejRes.remainingPoints),
           "X-RateLimit-Reset": String(Math.ceil((Date.now() + rejRes.msBeforeNext) / 1000)),
         };
-        return new Response(JSON.stringify({ error: "Too many requests" }), {
+        return new Response(JSON.stringify({ error: `Too many requests, retry in ${secs} seconds` }), {
           status: 429,
           headers: headers,
         });

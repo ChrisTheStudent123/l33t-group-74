@@ -3,7 +3,6 @@ import { GameController } from "../controllers/game.controller";
 export async function gameRoute(req: Request) {
   const url = new URL(req.url);
   const pathname = url.pathname.trim();
-  console.log(pathname);
   const method = req.method;
 
   // Routes for /games
