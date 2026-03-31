@@ -2,10 +2,16 @@ openapi: 3.0.3
 info:
   title: Game Collection API
   version: 1.0.0
-  description: A RESTful API for managing a video game collection and ratings.
+  description: |
+    A RESTful API for managing a video game collection and ratings.
 
+    Note: A global rate limit of 5 requests per second is enforced and shared across all routes.
+    
+    429 responses include standard rate-limit headers (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset).
 servers:
   - url: http://localhost:3000
+
+
 
 paths:
   /games:
@@ -55,6 +61,9 @@ paths:
           description: A list of games.
         "400":
           description: Bad request (invalid parameters).
+        "429":
+          description: Exceeded set rate limit.
+
     post:
       summary: Create a new game
       requestBody:
@@ -68,6 +77,8 @@ paths:
           description: Game created successfully.
         "400":
           description: Validation error.
+        "429":
+          description: Exceeded set rate limit.
 
   /games/{id}:
     parameters:
@@ -84,6 +95,8 @@ paths:
           description: Game details.
         "404":
           description: Game not found.
+        "429":
+          description: Exceeded set rate limit.
     put:
       summary: Update a game
       requestBody:
@@ -97,6 +110,8 @@ paths:
           description: Game updated successfully.
         "404":
           description: Game not found.
+        "429":
+          description: Exceeded set rate limit.
     delete:
       summary: Delete a game
       responses:
@@ -104,13 +119,66 @@ paths:
           description: Game deleted successfully.
         "404":
           description: Game not found.
+        "429":
+          description: Exceeded set rate limit.
 
   /ratings:
     get:
       summary: Get all ratings
+      description: Returns a list of ratings from the collection with optional filtering and pagination.
+      parameters:
+        - in: query
+          name: game_id
+          schema:
+            type: number
+          description: Searches ratings with matching game_id. Ignores all other parameters. 
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: Search query for matching game titles (partial match). Max 50 chars.
+        - in: query
+          name: rating
+          schema:
+            type: integer
+          description: Rating to limit results by (requires cmp parameter).
+        - in: query
+          name: cmp
+          schema:
+            type: string
+            enum: [gt, lt]
+          description: Comparison operator for year (gt = greater than, lt = less than).
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Column to sort by (title or rating).
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Sort order direction.
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number for pagination (>= 1).
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results per page (1-1000).
+
       responses:
         "200":
           description: A list of ratings.
+        "400":
+          description: Invalid parameter or value.
+        "422":
+         description: Value exceeded valid range.
+        "429":
+          description: Exceeded set rate limit.
     post:
       summary: Create a new rating
       requestBody:
@@ -124,13 +192,25 @@ paths:
               properties:
                 game_id:
                   type: integer
+                  description: Supersedes game_title if also provided.
                 game_title:
                   type: string
                 rating:
                   type: number
+              oneOf: 
+                - title: "game_id"
+                  required: ["game_id"]
+                - title: "game_title"
+                  required: ["game_title"]
       responses:
         "201":
           description: Rating created successfully.
+        "400":
+          description: game_title or game_id doesn't match with any game.
+        "422":
+          description: game_title matches multiple entries, must match only one.
+        "429":
+          description: Exceeded set rate limit.
 
   /ratings/{id}:
     parameters:
@@ -144,6 +224,12 @@ paths:
       responses:
         "200":
           description: Rating details.
+        "400":
+          description: Invalid rating id
+        "404":
+          description: Rating not found
+        "429":
+          description: Exceeded set rate limit.
     put:
       summary: Update a rating
       requestBody:
@@ -155,22 +241,44 @@ paths:
               required:
                 - rating
               properties:
+                game_id:
+                  type: integer
+                  description: Supersedes game_title if also provided.
+                game_title:
+                  type: string
                 rating:
                   type: number
+              oneOf: 
+                - title: "game_id"
+                  required: ["game_id"]
+                - title: "game_title"
+                  required: ["game_title"]
       responses:
         "200":
           description: Rating updated.
+        "400":
+          description: Invalid value for rating is passed. Exceeds range.
+        "404":
+          description: Rating id not found.
+        "429":
+          description: Exceeded set rate limit.
     delete:
       summary: Delete a rating
       responses:
         "204":
           description: Rating deleted successfully.
+        "404":
+          description: Rating id not found.
+        "429":
+          description: Exceeded set rate limit.
   /genres:
     get:
       summary: Get all genres
       responses:
         "200":
           description: A list of genres.
+        "429":
+          description: Exceeded set rate limit.
     post:
       summary: Create a new genre
       requestBody:
@@ -190,6 +298,8 @@ paths:
           description: Genre created successfully.
         "409":
           description: Genre already exists.
+        "429":
+          description: Exceeded set rate limit.
 
   /genres/{id}:
     parameters:
@@ -205,6 +315,8 @@ paths:
           description: Genre details.
         "404":
           description: Genre not found.
+        "429":
+          description: Exceeded set rate limit.
     put:
       summary: Update a genre
       requestBody:
@@ -224,6 +336,8 @@ paths:
           description: Genre updated successfully.
         "404":
           description: Genre not found.
+        "429":
+          description: Exceeded set rate limit.
     delete:
       summary: Delete a genre
       responses:
@@ -231,6 +345,8 @@ paths:
           description: Genre deleted successfully.
         "404":
           description: Genre not found.
+        "429":
+          description: Exceeded set rate limit.
 
 components:
   schemas:

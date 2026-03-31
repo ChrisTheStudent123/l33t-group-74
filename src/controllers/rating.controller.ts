@@ -153,6 +153,7 @@ export const RatingController = {
         return errorResponse("Rating must be between 0 and 10", 400);
       }
 
+
       let gameId: number;
       if (body.game_id) {
         gameId = body.game_id;
