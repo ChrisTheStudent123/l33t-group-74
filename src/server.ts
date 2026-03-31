@@ -21,26 +21,28 @@ serve({
     }
 
     //Returns rate limiter responses if check fails (internal error or rate exceeded)
-    const rateRes = await checkRateLimit(ip.address);
-    if (rateRes && rateLimit) {
-      return rateRes;
+    if (rateLimit) {
+      const rateRes = await checkRateLimit(ip.address);
+      if (rateRes) {
+        return rateRes;
+      }
     }
 
-      // ==========================================
-      // API Documentation Routes
-      // ==========================================
+    // ==========================================
+    // API Documentation Routes
+    // ==========================================
 
-      // 1. Serve the raw YAML file
-      if (url.pathname === "/openapi.yaml") {
-          const file = Bun.file("./openapi.yaml");
-          return new Response(file, {
-              headers: { "Content-Type": "text/yaml" }
-          });
-      }
+    // 1. Serve the raw YAML file
+    if (url.pathname === "/openapi.yaml") {
+      const file = Bun.file("./openapi.yaml");
+      return new Response(file, {
+        headers: { "Content-Type": "text/yaml" },
+      });
+    }
 
-      // 2. Serve the ReDoc interactive UI
-      if (url.pathname === "/docs") {
-          const html = `
+    // 2. Serve the ReDoc interactive UI
+    if (url.pathname === "/docs") {
+      const html = `
       <!DOCTYPE html>
       <html>
         <head>
@@ -55,21 +57,24 @@ serve({
         </body>
       </html>
       `;
-          return new Response(html, {
-              headers: { "Content-Type": "text/html" }
-          });
-      }
+      return new Response(html, {
+        headers: { "Content-Type": "text/html" },
+      });
+    }
 
-      // Root URL redirect / Health check
-      if (url.pathname === "/") {
-          return new Response(JSON.stringify({
-              message: "API is running!",
-              docs: "Visit http://localhost:3000/docs for documentation."
-          }), {
-              status: 200,
-              headers: { "Content-Type": "application/json" }
-          });
-      }
+    // Root URL redirect / Health check
+    if (url.pathname === "/") {
+      return new Response(
+        JSON.stringify({
+          message: "API is running!",
+          docs: "Visit http://localhost:3000/docs for documentation.",
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
 
     // Route matching
     if (url.pathname.startsWith("/games")) {
@@ -78,10 +83,10 @@ serve({
     // Add other routes later
     if (url.pathname.startsWith("/ratings")) {
       return ratingRoute(req);
-      }
-      if (url.pathname.startsWith("/genres")) {
-          return genreRoute(req);
-      }
+    }
+    if (url.pathname.startsWith("/genres")) {
+      return genreRoute(req);
+    }
 
     //Fallback rotue
     return new Response(JSON.stringify({ error: "Not found" }), {

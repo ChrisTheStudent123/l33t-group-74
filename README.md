@@ -10,13 +10,17 @@ For testing without rate limiter:
 ```bun testing```
 
 
+Documentation for all routes: 
+/docs
+
+
 Routes:
 /games
 /...
 /...
 /...
 
-# /games
+# Example with route: /games
 Attributes:
 |field|type|description|
 |---|---|---|
