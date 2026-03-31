@@ -83,7 +83,7 @@ export const RatingModel = {
       SELECT r.id as rating_id, r.rating, r.game_id, g.title as game_title
       FROM ratings r 
       JOIN  games g ON r.game_id = g.id
-	    WHERE g.id = ?
+	    WHERE r.id = ?
       `);
 
     const result: any = stmt.get(id);
@@ -115,14 +115,14 @@ export const RatingModel = {
       return stmt.lastInsertRowid;
     })();
   },
-  update(rating: any) {
+  update(gameId: number, rating: number, rating_id: number) {
     return db.transaction(() => {
-      const found: any = db.query(`SELECT id FROM ratings WHERE id = ?`).get(rating.id);
-      if (!found) {
-        throw new Error("Rating not found");
-      }
-
-      return rating.id;
+      db.query(
+        `
+        UPDATE ratings 
+        SET game_id = ?, rating = ? 
+        WHERE id = ?`,
+      ).run(gameId, rating, rating_id);
     })();
   },
   delete(id: number) {

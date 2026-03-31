@@ -180,8 +180,9 @@ export const RatingController = {
       }
 
       const rating = RatingModel.create(gameId, body.rating);
-
-      return successResponse(rating, 201);
+      const createdValue = await RatingModel.getById(Number(rating));
+      console.log("createdValue", createdValue);
+      return successResponse(createdValue, 201);
     } catch (e: any) {
       console.log(e);
       return errorResponse("Failed to create rating", 500);
@@ -197,12 +198,32 @@ export const RatingController = {
       if (body["rating"] === undefined) {
         return errorResponse("Missing required field: rating", 400);
       }
+      if (typeof body["rating"] !== "number") {
+        return errorResponse("Rating must be a number", 400);
+      }
       if (!validateNumberType(body["rating"]) || !validateRating(body["rating"])) {
         return errorResponse("Rating must be between 0 and 10", 400);
       }
+      if (body["game_id"] === undefined && body["game_title"] === undefined) {
+        return errorResponse("Missing required field: either game_id or game_title", 400);
+      }
+      let gameId: number;
+      if (body.game_id) {
+        gameId = body.game_id;
+      } else {
+        const findGameId: any = RatingModel.getGamesIdByTitle(body.game_title);
+        if (findGameId.length === 1) {
+          gameId = findGameId[0].id;
+        } else if (findGameId.length > 1) {
+          return errorResponse("Multiple entries match game_title, try game_id instead", 422);
+        } else {
+          return errorResponse("Game title not found", 400);
+        }
+      }
 
-      const data: string = "placeholder";
-      return successResponse(data, 200);
+      RatingModel.update(gameId, body.rating, id);
+      const updatedValue = await RatingModel.getById(id);
+      return successResponse(updatedValue, 200);
     } catch (e: any) {
       console.log(e);
       return errorResponse("Failed to update rating", 500);
