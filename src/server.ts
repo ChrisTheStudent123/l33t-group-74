@@ -3,7 +3,7 @@ import { gameRoute } from "./routes/game.route";
 import { ratingRoute } from "./routes/rating.route";
 import { checkRateLimit } from "./utils/rateLimiter";
 import { genreRoute } from "./routes/genre.route";
-
+import { platformRoute } from "./routes/platform.route";
 const rateLimit = process.env.RATE_LIMIT === "off" ? false : true;
 
 // import other routes when finished
@@ -87,6 +87,9 @@ serve({
     if (url.pathname.startsWith("/genres")) {
       return genreRoute(req);
     }
+	if (url.pathname.startsWith("/platforms")) {
+	  return platformRoute(req);
+	}
 
     //Fallback rotue
     return new Response(JSON.stringify({ error: "Not found" }), {
