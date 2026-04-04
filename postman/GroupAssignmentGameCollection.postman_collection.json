@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "6a384387-27c0-46cf-9a68-dff6cf58e063",
+    "_postman_id": "49442ff1-bcb4-49e4-8503-00e0ab22d3af",
     "name": "GroupAssignmentGameCollection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "51814624",
-    "_collection_link": "https://go.postman.co/collection/51814624-6a384387-27c0-46cf-9a68-dff6cf58e063?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/51814624-49442ff1-bcb4-49e4-8503-00e0ab22d3af?source=collection_link"
   },
   "item": [
     {
@@ -2185,6 +2185,54 @@
     },
     {
       "name": "get platforms",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is an array of platforms\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Every platform object has the required fields\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    const requiredFields = [\"id\", \"system\", \"company\"];\r",
+              "    jsonData.forEach(function (platform) {\r",
+              "        requiredFields.forEach(function (field) {\r",
+              "            pm.expect(platform).to.have.property(field);\r",
+              "        });\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Each field has the correct type\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    jsonData.forEach(function (platform) {\r",
+              "        pm.expect(platform.id).to.be.a(\"number\");\r",
+              "        pm.expect(platform.system).to.be.a(\"string\");\r",
+              "        pm.expect(platform.company).to.be.a(\"string\");\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", function () {\r",
+              "    pm.response.to.have.header('Content-Type');\r",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -2200,30 +2248,74 @@
           ]
         }
       },
-      "response": []
-    },
-    {
-      "name": "get platform",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3000/platforms/12",
-          "protocol": "http",
-          "host": [
-            "localhost"
+      "response": [
+        {
+          "name": "get platforms",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/platforms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms"
+              ]
+            }
+          },
+          "_postman_previewlanguage": "",
+          "header": [],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
           ],
-          "port": "3000",
-          "path": [
-            "platforms",
-            "12"
-          ]
+          "body": "[\r\n    {\r\n        \"id\": 1,\r\n        \"company\": \"Sony\",\r\n        \"system\": \"PlayStation 5\"\r\n    },\r\n    {\r\n        \"id\": 2,\r\n        \"company\": \"Sony\",\r\n        \"system\": \"PlayStation 4\"\r\n    },\r\n    {\r\n        \"id\": 3,\r\n        \"company\": \"Sony\",\r\n        \"system\": \"PlayStation 3\"\r\n    },\r\n    {\r\n        \"id\": 4,\r\n        \"company\": \"Microsoft\",\r\n        \"system\": \"Xbox Series X/S\"\r\n    },\r\n    {\r\n        \"id\": 5,\r\n        \"company\": \"Microsoft\",\r\n        \"system\": \"Xbox One\"\r\n    },\r\n    {\r\n        \"id\": 6,\r\n        \"company\": \"Microsoft\",\r\n        \"system\": \"Xbox 360\"\r\n    },\r\n    {\r\n        \"id\": 7,\r\n        \"company\": \"Nintendo\",\r\n        \"system\": \"Switch 2\"\r\n    },\r\n    {\r\n        \"id\": 8,\r\n        \"company\": \"Nintendo\",\r\n        \"system\": \"Switch\"\r\n    },\r\n    {\r\n        \"id\": 9,\r\n        \"company\": \"Nintendo\",\r\n        \"system\": \"Wii U\"\r\n    },\r\n    {\r\n        \"id\": 19,\r\n        \"company\": \"Nintendo\",\r\n        \"system\": \"Wii\"\r\n    },\r\n    {\r\n        \"id\": 21,\r\n        \"company\": \"Nintendo\",\r\n        \"system\": \"Wii\"\r\n    }\r\n]"
         }
-      },
-      "response": []
+      ]
     },
     {
       "name": "create platform",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is an object\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an(\"object\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"ID of created platform is returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.have.property(\"id\");\r",
+              "    pm.collectionVariables.set(\"createdPlatformId\", jsonData.id);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", function () {\r",
+              "    pm.response.to.have.header('Content-Type');\r",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [],
@@ -2248,10 +2340,374 @@
           ]
         }
       },
-      "response": []
+      "response": [
+        {
+          "name": "create platform",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"company\": \"Nintendo\",\r\n  \"system\": \"Wii\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/platforms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms"
+              ]
+            }
+          },
+          "_postman_previewlanguage": "",
+          "header": [],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\r\n    \"id\": 22\r\n}"
+        }
+      ]
+    },
+    {
+      "name": "create platform missing parameter",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 422\", function () {\r",
+              "    pm.response.to.have.status(422);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is an object\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an(\"object\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Error message is returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    const requiredFields = [\"error\"];\r",
+              "    requiredFields.forEach(function (field) {\r",
+              "        pm.expect(jsonData).to.have.property(field);\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", function () {\r",
+              "    pm.response.to.have.header('Content-Type');\r",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"company\": \"Nintendo\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/platforms",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "platforms"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "create platform missing parameter",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"company\": \"Nintendo\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/platforms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms"
+              ]
+            }
+          },
+          "_postman_previewlanguage": "",
+          "header": [],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\r\n    \"error\": \"Missing required field: system\"\r\n}"
+        }
+      ]
+    },
+    {
+      "name": "get platform",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is a single platform object\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an(\"object\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Required fields are returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    const requiredFields = [\"id\", \"system\", \"company\"];\r",
+              "    requiredFields.forEach(function (field) {\r",
+              "        pm.expect(jsonData).to.have.property(field);\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Each field has the correct type\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+              "    pm.expect(jsonData.system).to.be.a(\"string\");\r",
+              "    pm.expect(jsonData.company).to.be.a(\"string\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Correct platform is returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"createdPlatformId\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", function () {\r",
+              "    pm.response.to.have.header('Content-Type');\r",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/platforms/{{createdPlatformId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "platforms",
+            "{{createdPlatformId}}"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "get platform",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/platforms/22",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms",
+                "22"
+              ]
+            }
+          },
+          "_postman_previewlanguage": "",
+          "header": [],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\r\n    \"id\": 22,\r\n    \"company\": \"Nintendo\",\r\n    \"system\": \"Wii\"\r\n}"
+        }
+      ]
+    },
+    {
+      "name": "get platform id not found",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "\r",
+              "pm.test(\"Status code is 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is a single platform object\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an(\"object\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Error message is returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    const requiredFields = [\"error\"];\r",
+              "    requiredFields.forEach(function (field) {\r",
+              "        pm.expect(jsonData).to.have.property(field);\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", function () {\r",
+              "    pm.response.to.have.header('Content-Type');\r",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/platforms/999999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "platforms",
+            "999999"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "get platform id not found",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/platforms/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms",
+                "999999"
+              ]
+            }
+          },
+          "_postman_previewlanguage": "",
+          "header": [],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\r\n    \"error\": \"Platform not found\"\r\n}"
+        }
+      ]
     },
     {
       "name": "update platform",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response contains success and id\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an('object');\r",
+              "    pm.expect(jsonData).to.have.property('id');\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Correct platform is updated\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"createdPlatformId\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", function () {\r",
+              "    pm.response.to.have.header('Content-Type');\r",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "PUT",
         "header": [],
@@ -2265,7 +2721,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/platforms/12",
+          "raw": "http://localhost:3000/platforms/{{createdPlatformId}}",
           "protocol": "http",
           "host": [
             "localhost"
@@ -2273,19 +2729,185 @@
           "port": "3000",
           "path": [
             "platforms",
-            "12"
+            "{{createdPlatformId}}"
           ]
         }
       },
-      "response": []
+      "response": [
+        {
+          "name": "update platform",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"company\": \"Nintendo\",\r\n  \"system\": \"Wii\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/platforms/22",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms",
+                "22"
+              ]
+            }
+          },
+          "_postman_previewlanguage": "",
+          "header": [],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\r\n    \"success\": true,\r\n    \"id\": 22\r\n}"
+        }
+      ]
+    },
+    {
+      "name": "update platform id not found",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Error message is returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    const requiredFields = [\"error\"];\r",
+              "    requiredFields.forEach(function (field) {\r",
+              "        pm.expect(jsonData).to.have.property(field);\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", function () {\r",
+              "    pm.response.to.have.header('Content-Type');\r",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"company\": \"Nintendo\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/platforms/999999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "platforms",
+            "999999"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "update platform id not found",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"company\": \"Nintendo\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/platforms/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms",
+                "999999"
+              ]
+            }
+          },
+          "_postman_previewlanguage": "",
+          "header": [],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\r\n    \"error\": \"Invalid platform ID\"\r\n}"
+        }
+      ]
     },
     {
       "name": "delete platform",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function () {\r",
+              "    pm.response.to.have.status(204);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Deleted platform is confirmed in response (if body returned)\", function () {\r",
+              "    if (pm.response.code === 200 && pm.response.text().length > 0) {\r",
+              "        const jsonData = pm.response.json();\r",
+              "        pm.expect(jsonData).to.be.an('object');\r",
+              "        pm.expect(jsonData).to.have.property('id');\r",
+              "    }\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/platforms/11",
+          "raw": "http://localhost:3000/platforms/{{createdPlatformId}}",
           "protocol": "http",
           "host": [
             "localhost"
@@ -2293,17 +2915,155 @@
           "port": "3000",
           "path": [
             "platforms",
-            "11"
+            "{{createdPlatformId}}"
           ]
         }
       },
-      "response": []
+      "response": [
+        {
+          "name": "delete platform",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/platforms/{{createdPlatformId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms",
+                "{{createdPlatformId}}"
+              ]
+            }
+          },
+          "_postman_previewlanguage": null,
+          "header": null,
+          "cookie": [],
+          "body": null
+        }
+      ]
+    },
+    {
+      "name": "delete platform id not found",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Error message is returned\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    const requiredFields = [\"error\"];\r",
+              "    requiredFields.forEach(function (field) {\r",
+              "        pm.expect(jsonData).to.have.property(field);\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Deleted platform is confirmed in response (if body returned)\", function () {\r",
+              "    if (pm.response.code === 200 && pm.response.text().length > 0) {\r",
+              "        const jsonData = pm.response.json();\r",
+              "        pm.expect(jsonData).to.be.an('object');\r",
+              "        pm.expect(jsonData).to.have.property('id');\r",
+              "    }\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is under 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/platforms/999999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "platforms",
+            "999999"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "delete platform id not found",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/platforms/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "platforms",
+                "999999"
+              ]
+            }
+          },
+          "_postman_previewlanguage": "",
+          "header": [],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\"error\":\"Invalid platform ID\"}"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
     }
   ],
   "variable": [
     {
       "key": "createdGameId",
       "value": ""
+    },
+    {
+      "key": "createdPlatformId",
+      "value": "",
+      "type": "default"
     }
   ]
 }
