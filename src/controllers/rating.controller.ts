@@ -182,7 +182,6 @@ export const RatingController = {
 
       const rating = RatingModel.create(gameId, body.rating);
       const createdValue = await RatingModel.getById(Number(rating));
-      console.log("createdValue", createdValue);
       return successResponse(createdValue, 201);
     } catch (e: any) {
       console.log(e);
