@@ -10,8 +10,7 @@ For testing without rate limiter:
 ```bun testing```
 
 
-Documentation for all routes: 
-/docs
+## API documentation route: */docs*
 
 
 Routes:

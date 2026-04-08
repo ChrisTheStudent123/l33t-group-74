@@ -9,7 +9,7 @@ function validateNumberType(num: any): Boolean {
 }
 
 function successResponse(data: any, status: number): Response {
-  return Response.json({ data }, { status, headers: { "Content-Type": "application/json" } });
+  return Response.json(data, { status, headers: { "Content-Type": "application/json" } });
 }
 
 function errorResponse(errorMessage: string, status: number): Response {
@@ -81,13 +81,13 @@ export const RatingController = {
 
       const pageParam = url.searchParams.get("page");
       const page = pageParam ? Number(pageParam) : undefined;
-      if (page && (isNaN(page) || page < 1)) {
+      if (page === 0 || page && (isNaN(page) || page < 1)) {
         return errorResponse("Page parameter must greater than 0", 422);
       }
 
       const limitParam = url.searchParams.get("limit");
       const limit = limitParam ? Number(limitParam) : undefined;
-      if (limit && (isNaN(limit) || limit < 1 || limit > 100)) {
+      if (limit === 0 || limit && (isNaN(limit) || limit < 1 || limit > 100)) {
         return errorResponse("Limit parameter must be between 1-1000", 422);
       }
 
@@ -182,7 +182,6 @@ export const RatingController = {
 
       const rating = RatingModel.create(gameId, body.rating);
       const createdValue = await RatingModel.getById(Number(rating));
-      console.log("createdValue", createdValue);
       return successResponse(createdValue, 201);
     } catch (e: any) {
       console.log(e);
