@@ -3066,4 +3066,170 @@
       "type": "default"
     }
   ]
+  {
+    "info": {
+      "name": "Group 74 - Genres API Tests",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Create Genre",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+                "pm.test(\"ID of created genre is returned\", function () {",
+                "    const jsonData = pm.response.json();",
+                "    pm.expect(jsonData).to.have.property(\"id\");",
+                "    pm.collectionVariables.set(\"createdGenreId\", jsonData.id);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"genre\": \"Metroidvania\"\n}",
+            "options": { "raw": { "language": "json" } }
+          },
+          "url": {
+            "raw": "http://localhost:3000/genres",
+            "protocol": "http",
+            "host": [ "localhost" ],
+            "port": "3000",
+            "path": [ "genres" ]
+          }
+        }
+      },
+      {
+        "name": "Get All Genres",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                "pm.test(\"Response is an array\", function () {",
+                "    const jsonData = pm.response.json();",
+                "    pm.expect(jsonData).to.be.an(\"array\");",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/genres",
+            "protocol": "http",
+            "host": [ "localhost" ],
+            "port": "3000",
+            "path": [ "genres" ]
+          }
+        }
+      },
+      {
+        "name": "Get Genre by ID",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                "pm.test(\"Correct genre is returned\", function () {",
+                "    const jsonData = pm.response.json();",
+                "    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"createdGenreId\"));",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/genres/{{createdGenreId}}",
+            "protocol": "http",
+            "host": [ "localhost" ],
+            "port": "3000",
+            "path": [ "genres", "{{createdGenreId}}" ]
+          }
+        }
+      },
+      {
+        "name": "Update Genre",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                "pm.test(\"Response indicates success\", function () {",
+                "    const jsonData = pm.response.json();",
+                "    pm.expect(jsonData.success).to.eql(true);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "method": "PUT",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"genre\": \"Action RPG\"\n}",
+            "options": { "raw": { "language": "json" } }
+          },
+          "url": {
+            "raw": "http://localhost:3000/genres/{{createdGenreId}}",
+            "protocol": "http",
+            "host": [ "localhost" ],
+            "port": "3000",
+            "path": [ "genres", "{{createdGenreId}}" ]
+          }
+        }
+      },
+      {
+        "name": "Delete Genre",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 204\", function () { pm.response.to.have.status(204); });"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "method": "DELETE",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/genres/{{createdGenreId}}",
+            "protocol": "http",
+            "host": [ "localhost" ],
+            "port": "3000",
+            "path": [ "genres", "{{createdGenreId}}" ]
+          }
+        }
+      }
+    ],
+    "variable": [
+      {
+        "key": "createdGenreId",
+        "value": ""
+      }
+    ]
+  }
 }
