@@ -10,6 +10,10 @@ For testing without rate limiter:
 ```bun testing```
 
 
+To drop entire DB:
+```bun reset-db```
+
+
 ## API documentation route: */docs*
 
 
