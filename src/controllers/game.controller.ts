@@ -111,7 +111,6 @@ export const GameController = {
 		});
 
     } catch (error: any) {
-		console.error("Failed to fetch games:", error);
 		return new Response(JSON.stringify({ error: "Failed to fetch games", details: error.message }), {
 			status: 500, headers: { "Content-Type": "application/json" }
         });
@@ -137,7 +136,6 @@ export const GameController = {
 				status: 200, headers: { "Content-Type": "application/json" }
 			});
 		} catch (error: any) {
-			console.error("Failed to fetch game by ID:", error);
 			return new Response(JSON.stringify({ error: "Failed to fetch game", details: error.message }), {
 				status: 500, headers: { "Content-Type": "application/json" }
 			});
@@ -179,7 +177,6 @@ export const GameController = {
 				status: 201, headers: { "Content-Type": "application/json" }
 			});
 		} catch (error: any) {
-			console.error("Failed to create game:", error);
 			return new Response(JSON.stringify({ error: "Failed to create game", details: error.message }), {
 				status: 500, headers: { "Content-Type": "application/json" }
 			});
@@ -234,7 +231,6 @@ export const GameController = {
 				status: 200, headers: { "Content-Type": "application/json" }
 			});
 		} catch (error: any) {
-			console.error("Failed to update game:", error);
 			return new Response(JSON.stringify({ error: "Failed to update game", details: error.message }), {
 				status: 500, headers: { "Content-Type": "application/json" }
 			});
@@ -254,7 +250,6 @@ export const GameController = {
 			}
 			return new Response(null, { status: 204 });
 		} catch (error: any) {
-			console.error("Failed to delete game:", error);
 			return new Response(JSON.stringify({ error: "Failed to delete game", details: error.message }), {
 				status: 500, 
 			});

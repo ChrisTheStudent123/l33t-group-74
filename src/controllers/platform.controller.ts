@@ -37,7 +37,6 @@ export const PlatformController = {
             });
         } catch (error: any) {
             const err = "Failed to fetch platforms"
-            console.error(err + ":", error);
 			return new Response(JSON.stringify({ error: err, details: error.message }), {
 				status: 500, headers: { "Content-Type": "application/json" }
 			});
@@ -67,7 +66,6 @@ export const PlatformController = {
 			});
         } catch (error: any) {
             const err = "Failed to fetch platform by ID"
-            console.error(err + ":", error);
 			return new Response(JSON.stringify({ error: err, details: error.message }), {
 				status: 500, headers: { "Content-Type": "application/json" }
 			});
@@ -113,7 +111,6 @@ export const PlatformController = {
             });
         } catch (error: any) {
             const err = "Failed to create platform"
-            console.error(err + ":", error);
 			return new Response(JSON.stringify({ error: err, details: error.message }), {
 				status: 500, headers: { "Content-Type": "application/json" }
 			});
@@ -153,7 +150,6 @@ export const PlatformController = {
             });
         } catch (error: any) {
             const err = "Failed to update platform"
-            console.error(err + ":", error);
 			return new Response(JSON.stringify({ error: err, details: error.message }), {
 				status: 500, headers: { "Content-Type": "application/json" }
 			});
@@ -171,7 +167,6 @@ export const PlatformController = {
             return new Response(null, { status: 204 });
         } catch (error: any) {
             const err = "Failed to delete platform"
-            console.error(err + ":", error);
 			return new Response(JSON.stringify({ error: err, details: error.message }), {
 				status: 500, headers: { "Content-Type": "application/json" }
 			});
