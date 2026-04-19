@@ -1,5 +1,12 @@
 import { GameModel } from "../models/game.model";
 
+function errorResponse(errorMessage: string, status: number): Response {
+	return new Response(JSON.stringify({ error: errorMessage }), {
+		status: status,
+		headers: { "Content-Type": "application/json" },
+	});
+}
+
 export const GameController = {
 
 //GET /games?year=2022&cmp=gt&order=asc&page=1&limit=10&sort=title
@@ -110,11 +117,10 @@ export const GameController = {
 			status: 200, headers: { "Content-Type": "application/json" }
 		});
 
-    } catch (error: any) {
-		return new Response(JSON.stringify({ error: "Failed to fetch games", details: error.message }), {
-			status: 500, headers: { "Content-Type": "application/json" }
-        });
-    }
+		} catch (error: any) {
+		  console.error(error); 
+		  return errorResponse("Failed to fetch games", 500);
+		}
   },
 
 // GET /games/:id
@@ -135,11 +141,10 @@ export const GameController = {
 			return new Response(JSON.stringify(game), {
 				status: 200, headers: { "Content-Type": "application/json" }
 			});
-		} catch (error: any) {
-			return new Response(JSON.stringify({ error: "Failed to fetch game", details: error.message }), {
-				status: 500, headers: { "Content-Type": "application/json" }
-			});
-		}
+			} catch (error: any) {
+			  console.error(error);
+			  return errorResponse("Failed to fetch game", 500);
+			}
 	},
 
 // POST /games
@@ -172,15 +177,17 @@ export const GameController = {
 			}
 
 			const id = GameModel.create(body);
+			const createdGame = await GameModel.getById(id);
 
-			return new Response(JSON.stringify({ id }), {
-				status: 201, headers: { "Content-Type": "application/json" }
+			return new Response(JSON.stringify(createdGame), {
+			  status: 201,
+			  headers: { "Content-Type": "application/json" }
 			});
-		} catch (error: any) {
-			return new Response(JSON.stringify({ error: "Failed to create game", details: error.message }), {
-				status: 500, headers: { "Content-Type": "application/json" }
-			});
-		}
+			} catch (error: any) {
+			  console.error(error);
+			  return errorResponse("Failed to create game", 500);
+			}
+		
 	},
 
 // PUT /games/:id
@@ -227,14 +234,16 @@ export const GameController = {
 					
 				}
 			}
-			return new Response(JSON.stringify({ success: true, id: id }), {
-				status: 200, headers: { "Content-Type": "application/json" }
+			const updatedGame = await GameModel.getById(id);
+
+			return new Response(JSON.stringify(updatedGame), {
+			  status: 200,
+			  headers: { "Content-Type": "application/json" }
 			});
-		} catch (error: any) {
-			return new Response(JSON.stringify({ error: "Failed to update game", details: error.message }), {
-				status: 500, headers: { "Content-Type": "application/json" }
-			});
-		}
+			} catch (error: any) {
+			  console.error(error);
+			  return errorResponse("Failed to update game", 500);
+			}
 	},
 
   // DELETE /games/:id
@@ -249,10 +258,9 @@ export const GameController = {
 				return new Response(JSON.stringify({ error: "Game not found" }), { status: 404 });
 			}
 			return new Response(null, { status: 204 });
-		} catch (error: any) {
-			return new Response(JSON.stringify({ error: "Failed to delete game", details: error.message }), {
-				status: 500, 
-			});
-		}
+			} catch (error: any) {
+			  console.error(error);
+			  return errorResponse("Failed to delete game", 500);
+			}
 	}
 };
